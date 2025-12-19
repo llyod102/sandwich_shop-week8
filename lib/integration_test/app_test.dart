@@ -135,6 +135,43 @@ void main() {
       expect(find.text('Cart: 0 items - £0.00'), findsOneWidget);
     });
 
+    testWidgets(
+        'profile screen journey - enter details and see welcome message',
+        (WidgetTester tester) async {
+      app.main();
+      await tester.pumpAndSettle();
+
+      // Navigate to profile screen
+      final profileButton = find.widgetWithText(StyledButton, 'Profile');
+      await tester.ensureVisible(profileButton);
+      await tester.tap(profileButton);
+      await tester.pumpAndSettle();
+
+      // Verify we're on the profile screen
+      expect(find.text('Profile'), findsOneWidget);
+      expect(find.text('Enter your details:'), findsOneWidget);
+
+      // Enter name and location
+      final nameField = find.widgetWithText(TextField, 'Your Name');
+      await tester.enterText(nameField, 'John Doe');
+      await tester.pumpAndSettle();
+
+      final locationField =
+          find.widgetWithText(TextField, 'Preferred Location');
+      await tester.enterText(locationField, 'London');
+      await tester.pumpAndSettle();
+
+      // Save profile
+      final saveButton = find.widgetWithText(ElevatedButton, 'Save Profile');
+      await tester.tap(saveButton);
+      await tester.pumpAndSettle();
+
+      // Verify back on order screen with welcome message
+      expect(find.text('Sandwich Counter'), findsOneWidget);
+      expect(
+          find.text('Welcome, John Doe! Ordering from London'), findsOneWidget);
+    });
+
     // Feel free to add more tests (e.g., to check saved orders, etc.)
   });
 }
