@@ -261,6 +261,42 @@ void main() {
       expect(find.text('£11.00'), findsOneWidget);
     });
 
+    testWidgets('settings screen - change font size',
+        (WidgetTester tester) async {
+      app.main();
+      await tester.pumpAndSettle();
+
+      // Navigate to settings
+      final settingsButton = find.widgetWithText(StyledButton, 'Settings');
+      await tester.ensureVisible(settingsButton);
+      await tester.tap(settingsButton);
+      await tester.pumpAndSettle();
+
+      // Verify we're on settings screen
+      expect(find.text('Settings'), findsOneWidget);
+      expect(find.text('Font Size'), findsOneWidget);
+
+      // Find the slider and change font size
+      final slider = find.byType(Slider);
+      expect(slider, findsOneWidget);
+
+      // Move slider to increase font size
+      await tester.drag(slider, const Offset(100, 0));
+      await tester.pumpAndSettle();
+
+      // Verify preview text is present
+      expect(find.text('This is sample text to preview the font size.'),
+          findsOneWidget);
+
+      // Go back
+      final backButton = find.widgetWithText(ElevatedButton, 'Back to Order');
+      await tester.tap(backButton);
+      await tester.pumpAndSettle();
+
+      // Verify back on order screen
+      expect(find.text('Sandwich Counter'), findsOneWidget);
+    });
+
     // Feel free to add more tests (e.g., to check saved orders, etc.)
   });
 }
