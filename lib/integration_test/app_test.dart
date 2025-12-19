@@ -172,6 +172,56 @@ void main() {
           find.text('Welcome, John Doe! Ordering from London'), findsOneWidget);
     });
 
+    testWidgets('cart screen - modify quantities and remove items',
+        (WidgetTester tester) async {
+      app.main();
+      await tester.pumpAndSettle();
+
+      // Add two different sandwiches
+      final addToCartButton = find.widgetWithText(StyledButton, 'Add to Cart');
+      await tester.ensureVisible(addToCartButton);
+      await tester.tap(addToCartButton);
+      await tester.pumpAndSettle();
+
+      // Change sandwich type and add another
+      final sandwichDropdown = find.byType(DropdownMenu<SandwichType>);
+      await tester.tap(sandwichDropdown);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Chicken Teriyaki').last);
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(addToCartButton);
+      await tester.tap(addToCartButton);
+      await tester.pumpAndSettle();
+
+      // Navigate to cart
+      final viewCartButton = find.widgetWithText(StyledButton, 'View Cart');
+      await tester.ensureVisible(viewCartButton);
+      await tester.tap(viewCartButton);
+      await tester.pumpAndSettle();
+
+      // Verify both items in cart
+      expect(find.text('Veggie Delight'), findsOneWidget);
+      expect(find.text('Chicken Teriyaki'), findsOneWidget);
+
+      // Increment quantity of first item
+      final addButtons = find.byIcon(Icons.add);
+      await tester.tap(addButtons.first);
+      await tester.pumpAndSettle();
+      expect(find.text('Quantity increased'), findsOneWidget);
+
+      // Decrement quantity
+      final removeButtons = find.byIcon(Icons.remove);
+      await tester.tap(removeButtons.first);
+      await tester.pumpAndSettle();
+      expect(find.text('Quantity decreased'), findsOneWidget);
+
+      // Remove entire item
+      final deleteButton = find.byIcon(Icons.delete).first;
+      await tester.tap(deleteButton);
+      await tester.pumpAndSettle();
+      expect(find.text('Item removed from cart'), findsOneWidget);
+    });
+
     // Feel free to add more tests (e.g., to check saved orders, etc.)
   });
 }
