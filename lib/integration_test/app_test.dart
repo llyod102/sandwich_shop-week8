@@ -222,6 +222,45 @@ void main() {
       expect(find.text('Item removed from cart'), findsOneWidget);
     });
 
+    testWidgets('order history - verify saved orders after checkout',
+        (WidgetTester tester) async {
+      app.main();
+      await tester.pumpAndSettle();
+
+      // Add item and complete checkout
+      final addToCartButton = find.widgetWithText(StyledButton, 'Add to Cart');
+      await tester.ensureVisible(addToCartButton);
+      await tester.tap(addToCartButton);
+      await tester.pumpAndSettle();
+
+      final viewCartButton = find.widgetWithText(StyledButton, 'View Cart');
+      await tester.ensureVisible(viewCartButton);
+      await tester.tap(viewCartButton);
+      await tester.pumpAndSettle();
+
+      final checkoutButton = find.widgetWithText(StyledButton, 'Checkout');
+      await tester.tap(checkoutButton);
+      await tester.pumpAndSettle();
+
+      final confirmPaymentButton = find.text('Confirm Payment');
+      await tester.tap(confirmPaymentButton);
+      await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 3));
+
+      // Navigate to order history
+      final orderHistoryButton =
+          find.widgetWithText(StyledButton, 'Order History');
+      await tester.ensureVisible(orderHistoryButton);
+      await tester.tap(orderHistoryButton);
+      await tester.pumpAndSettle();
+
+      // Verify order appears in history
+      expect(find.text('Order History'), findsOneWidget);
+      expect(find.textContaining('ORD'), findsOneWidget);
+      expect(find.text('1 items'), findsOneWidget);
+      expect(find.text('£11.00'), findsOneWidget);
+    });
+
     // Feel free to add more tests (e.g., to check saved orders, etc.)
   });
 }
