@@ -1,76 +1,169 @@
-# Sandwich Shop
+# Sandwich Shop App
 
-This is a simple Flutter app that allows users to order sandwiches.
-The app is built using Flutter and Dart, and it is designed primarily to be run in a web
-browser.
+A Flutter mobile application for ordering customizable sandwiches with cart management, checkout, order history, and user profile features.
 
-## Install the essential tools
+## Features
 
-1. **Terminal**:
+### 🥪 Order Screen
+- Select from multiple sandwich types (Veggie Delight, Chicken Teriyaki, Italian B.M.T., etc.)
+- Choose sandwich size (6-inch or Footlong)
+- Adjust quantity (up to 5 sandwiches)
+- Real-time price calculation
+- Add items to cart with instant cart summary updates
 
-    - **macOS** – use the built-in Terminal app by pressing **⌘ + Space**, typing **Terminal**, and pressing **Return**.
-    - **Windows** – open the start menu using the **Windows** key. Then enter **cmd** to open the **Command Prompt**. Alternatively, you can use **Windows PowerShell** or **Windows Terminal**.
+### 🛒 Cart Management
+- View all items in cart with individual prices
+- Modify quantities with +/- buttons
+- Remove individual items with delete button
+- Automatic price recalculation
+- Empty cart message when no items present
+- User feedback via snackbars for all cart actions
 
-2. **Git** – verify that you have `git` installed by entering `git --version`, in the terminal.
-    If this is missing, download the installer from [Git's official site](https://git-scm.com/downloads?utm_source=chatgpt.com).
+### 💳 Checkout Flow
+- Order summary with itemized list
+- Total price display
+- Simulated payment processing (2 seconds)
+- Automatic order saving to history
+- Cart clearing after successful checkout
 
-3. **Package managers**:
+### 📦 Order History
+- View all past orders with order IDs
+- Order date/time stamps
+- Item count and total price for each order
+- Persistent storage using SQLite
+- Empty state message when no orders exist
 
-    - **Homebrew** (macOS) – verify that you have `brew` installed with `brew --version`; if missing, follow the instructions on the [Homebrew installation page](https://brew.sh/).
-    - **Chocolatey** (Windows) – verify that you have `choco` installed with `choco --version`; if missing, follow the instructions on the [Chocolatey installation page](https://chocolatey.org/install).
+### 👤 Profile Screen
+- Save user name and preferred location
+- Welcome message displayed on order screen
+- Persistent profile data using SharedPreferences
 
-4. **Flutter SDK** – verify that you have `flutter` installed and it is working with `flutter doctor`; if missing, install it using your package manager:
+### ⚙️ Settings
+- Adjustable font size (12px - 32px)
+- Live preview of font changes
+- Global font size applied across all screens
+- Persistent font size preference
 
-    - **macOS**: `brew install --cask flutter`
-    - **Windows**: `choco install flutter`
+## Technical Stack
 
-5. **Visual Studio Code** – verify that you have `code` installed with `code --version`; if missing, use your package manager to install it:
+- **Framework**: Flutter 3.35.7
+- **State Management**: Provider
+- **Database**: SQLite (sqflite)
+- **Local Storage**: SharedPreferences
+- **Testing**: Integration tests with flutter_test
 
-    - **macOS**: `brew install --cask visual-studio-code`
-    - **Windows**: `choco install vscode`
+## Project Structure
 
-## Get the code
+```
+lib/
+├── main.dart                      # App entry point
+├── models/
+│   ├── cart.dart                  # Cart state management
+│   ├── sandwich.dart              # Sandwich data model
+│   └── saved_order.dart           # Order history model
+├── repositories/
+│   └── pricing_repository.dart   # Price calculation logic
+├── services/
+│   └── database_service.dart     # SQLite database operations
+├── views/
+│   ├── app_styles.dart           # Global styling and font size
+│   ├── cart_screen.dart          # Cart management UI
+│   ├── checkout_screen.dart      # Checkout flow
+│   ├── order_history_screen.dart # Order history display
+│   ├── order_screen.dart         # Main ordering interface
+│   ├── profile_screen.dart       # User profile
+│   └── settings_screen.dart      # App settings
+└── widgets/
+    └── common_widgets.dart       # Reusable UI components
 
-### If this is your first time working on this project
-
-Enter the following commands in your terminal to clone the repository and
-open it in Visual Studio Code.
-You may want to change directory (`cd`) to the directory where you want to clone the
-repository first.
-
-```bash
-git clone --branch 8 https://github.com/manighahrmani/sandwich_shop
-cd sandwich_shop
-code .
+integration_test/
+└── app_test.dart                 # End-to-end integration tests
 ```
 
-### If you have already cloned the repository
+## Building
 
-Enter the following commands in your terminal to switch to the correct branch.
-Remember to `cd` to the directory where you cloned the repository first.
-
+### Android Release Build
 ```bash
-git fetch origin
-git checkout 8
+flutter build apk --release
+```
+Output: `build/app/outputs/flutter-apk/app-release.apk` (81.4MB)
+
+### iOS Release Build
+```bash
+flutter build ios --release
 ```
 
-## Run the app
+### Web Build
+```bash
+flutter build web --release
+```
 
-Open the integrated terminal in Visual Studio Code by first opening the Command
-Palette with **⌘ + Shift + P** (macOS) or **Ctrl + Shift + P** (Windows) and
-typing **Terminal: Create New Terminal** then pressing **Enter**.
+## Running Tests
 
-In the terminal, run the following commands to install the dependencies and run
-the app in your web browser:
+### Integration Tests
+```bash
+flutter test integration_test/app_test.dart
+```
 
+The integration test suite covers:
+- Adding sandwiches to cart
+- Changing sandwich types
+- Modifying quantities
+- Complete checkout flow
+- Profile management
+- Cart modifications (add, remove, update)
+- Order history verification
+- Settings adjustments
+- Size switching (6-inch/footlong)
+
+## Requirements
+
+- Flutter SDK 3.0+
+- Dart 2.17+
+- Android SDK (for Android builds)
+- Xcode (for iOS builds)
+
+## Getting Started
+
+1. Install Flutter dependencies:
 ```bash
 flutter pub get
+```
+
+2. Run the app:
+```bash
 flutter run
 ```
 
-## Get support
+3. Run tests:
+```bash
+flutter test
+```
 
-Use [the dedicated Discord channel](https://discord.com/channels/760155974467059762/1370633732779933806)
-to ask your questions and get help from the community.
-Please provide as much context as possible, including the error messages you are seeing and
-screenshots (you can open Discord in your web browser).
+## App Flow
+
+1. **Order Screen** (Home) - Select and customize sandwiches
+2. **Cart Screen** - Review and modify cart contents
+3. **Checkout Screen** - Complete purchase with simulated payment
+4. **Order History** - View past orders
+5. **Profile Screen** - Update user information
+6. **Settings Screen** - Adjust app preferences
+
+## Database Schema
+
+### Orders Table
+- `id` (INTEGER PRIMARY KEY)
+- `orderId` (TEXT) - Unique order identifier
+- `timestamp` (TEXT) - Order date/time
+- `totalPrice` (REAL) - Order total
+- `itemCount` (INTEGER) - Number of items
+
+## Notes
+
+- Kotlin version 1.8.22 (upgrade to 2.1.0+ recommended)
+- Material Icons tree-shaking enabled (99.8% size reduction)
+- Release APK size: 81.4MB
+
+## License
+
+This project is a Flutter demonstration application for educational purposes.
