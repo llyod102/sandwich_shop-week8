@@ -297,6 +297,41 @@ void main() {
       expect(find.text('Sandwich Counter'), findsOneWidget);
     });
 
+    testWidgets('switch between six-inch and footlong sizes',
+        (WidgetTester tester) async {
+      app.main();
+      await tester.pumpAndSettle();
+
+      // Verify initial state is footlong
+      final sizeSwitch = find.byType(Switch);
+      expect(sizeSwitch, findsOneWidget);
+
+      // Switch to six-inch
+      await tester.tap(sizeSwitch);
+      await tester.pumpAndSettle();
+
+      // Add six-inch sandwich to cart
+      final addToCartButton = find.widgetWithText(StyledButton, 'Add to Cart');
+      await tester.ensureVisible(addToCartButton);
+      await tester.tap(addToCartButton);
+      await tester.pumpAndSettle();
+
+      // Verify price reflects six-inch (£6.00 instead of £11.00)
+      expect(find.text('Cart: 1 items - £6.00'), findsOneWidget);
+
+      // Switch back to footlong
+      await tester.tap(sizeSwitch);
+      await tester.pumpAndSettle();
+
+      // Add footlong to cart
+      await tester.ensureVisible(addToCartButton);
+      await tester.tap(addToCartButton);
+      await tester.pumpAndSettle();
+
+      // Verify total includes both (£6.00 + £11.00 = £17.00)
+      expect(find.text('Cart: 2 items - £17.00'), findsOneWidget);
+    });
+
     // Feel free to add more tests (e.g., to check saved orders, etc.)
   });
 }
